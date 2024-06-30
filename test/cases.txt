@@ -1,11 +1,16 @@
 # Booleans
 
-#t
-#f
+true
+false
+false
+
+GET
+POST
+PUT
 
 ==>
 
-Program(Boolean, Boolean)
+Program(Boolean, Boolean, Boolean, Method, Method, Method)
 
 # Identifiers
 
@@ -28,7 +33,7 @@ Program(String, String)
 # Applications
 
 (begin
-  (when #t
+  (when true
     (print (concat "hello" " " "world")))
   (print "DONE"))
 

@@ -6,15 +6,15 @@ expression {
   Identifier |
   String |
   Boolean |
-  Application { "(" expression* ")" }
+  Application { "(" expression* ")" } |
+  Method |
+  Endpoint
 }
 
 @tokens {
-  Identifier { $[a-zA-Z_\-0-9]+ }
-
   String { '"' (!["\\] | "\\" _)* '"' }
 
-  Boolean { "#t" | "#f" }
+  Boolean { "false" | "true" }
 
   LineComment { ";" ![\n]* }
 
@@ -22,5 +22,12 @@ expression {
 
   "(" ")"
 }
+
+@external tokens tokens from "./tokenizer" {
+  Method
+  Endpoint
+  Identifier
+}
+
 
 @detectDelim
