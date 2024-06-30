@@ -1,13 +1,15 @@
 import { ExternalTokenizer } from "@lezer/lr";
 import { readWord } from "./tokenUtils";
-import { Endpoint, Method, Identifier, ESIndex, Slash, Question, UrlParamQuestion } from "./syntax.grammar.terms";
+import { Endpoint, Method, Identifier, ESIndex, Slash, Question, UrlParamQuestion, UrlParamKey, UrlParamEqual, UrlParamValue, UrlParamAnd } from "./syntax.grammar.terms";
 import { methods } from './tokens/method'
 import { endpoints } from './tokens/endpoints'
 import { STATE_ENUM, esStatueInstance } from "./state";
 
 
 const enum Ch {
+  And = 38,
   Slash = 47,
+  Equal = 61,
   Question = 63
 }
 
@@ -17,7 +19,11 @@ export const tokenizer = new ExternalTokenizer((input, stack) => {
   esStatueInstance.setState(stack.context)
   if (/[a-zA-Z_0-9]+/.test(word)) {
     const endpointsKey = Object.keys(endpoints)
-    if (methods.includes(word)) {
+    if (stack.context === STATE_ENUM.URL_PARAMS_KEY) {
+      input.acceptToken(UrlParamKey)
+    } else if (stack.context === STATE_ENUM.URL_PARAMS_VALUE) {
+      input.acceptToken(UrlParamValue)
+    } else if (methods.includes(word)) {
       input.acceptToken(Method)
       console.log(word, stack, 'method')
     } else if (endpointsKey.includes(word)) {
@@ -40,6 +46,14 @@ export const tokenizer = new ExternalTokenizer((input, stack) => {
       input.acceptToken(UrlParamQuestion)
     } else {
       input.acceptToken(Question)
+    }
+  } else if (next === Ch.Equal && stack.context === STATE_ENUM.URL_PARAMS_KEY) {
+    input.advance();
+    input.acceptToken(UrlParamEqual)
+  } else if (next === Ch.And) {
+    if ([STATE_ENUM.URL_PARAMS_KEY, STATE_ENUM.URL_PARAMS_VALUE].includes(stack.context)) {
+      input.advance();
+      input.acceptToken(UrlParamAnd)
     }
   }
   input.advance();

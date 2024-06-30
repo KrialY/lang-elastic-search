@@ -12,7 +12,11 @@ expression {
   ESIndex |
   Slash |
   UrlParamQuestion |
-  Question
+  Question |
+  UrlParamKey |
+  UrlParamValue |
+  UrlParamEqual |
+  UrlParamAnd
 }
 
 @tokens {
@@ -35,6 +39,10 @@ expression {
   Slash
   UrlParamQuestion
   Question
+  UrlParamKey
+  UrlParamValue
+  UrlParamEqual
+  UrlParamAnd
 }
 
 

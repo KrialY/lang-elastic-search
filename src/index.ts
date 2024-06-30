@@ -21,6 +21,8 @@ export const ESLanguage = LRLanguage.define({
         LineComment: t.lineComment,
         Endpoint: customTags.Endpoint,
         Method: customTags.Method,
+        UrlParamKey: t.keyword,
+        UrlParamValue: t.string,
         "( )": t.paren
       })
     ],
