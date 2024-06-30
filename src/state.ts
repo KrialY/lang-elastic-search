@@ -1,18 +1,28 @@
 export const STATE_ENUM = {
   METHOD: 1,
-  PATH_START: 2.1,
-  PATH_ENDPOINT: 2.2,
+  PATH_START: 2.1, // esIndex, endpoint
+  PATH_ENDPOINT: 2.2, // endpoint
   URL_PARAMS: 3
 }
 
 class ESState {
-  currentState
+  currentState: number
+  stack: Array<number> = [STATE_ENUM.METHOD]
   constructor() {
     this.currentState = STATE_ENUM.METHOD
   }
 
-  setState(state: any) {
+  setState(state: number) {
     this.currentState = state
+    this.updateStack(state)
+  }
+
+  updateStack(state: number) {
+    if (this.stack.includes(state)) {
+      this.stack = [state]
+    } else {
+      this.stack.push(state)
+    }
   }
 }
 

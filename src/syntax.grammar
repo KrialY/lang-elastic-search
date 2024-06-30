@@ -8,7 +8,9 @@ expression {
   Boolean |
   Application { "(" expression* ")" } |
   Method |
-  Endpoint
+  Endpoint |
+  ESIndex |
+  Slash
 }
 
 @tokens {
@@ -27,6 +29,8 @@ expression {
   Method
   Endpoint
   Identifier
+  ESIndex
+  Slash
 }
 
 

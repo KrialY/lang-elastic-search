@@ -1,10 +1,14 @@
 import { ExternalTokenizer } from "@lezer/lr";
 import { readWord } from "./tokenUtils";
-import { Endpoint, Method, Identifier } from "./syntax.grammar.terms";
+import { Endpoint, Method, Identifier, ESIndex, Slash } from "./syntax.grammar.terms";
 import { methods } from './tokens/method'
 import { endpoints } from './tokens/endpoints'
-import { esStatueInstance } from "./state";
+import { STATE_ENUM, esStatueInstance } from "./state";
 
+
+const enum Ch {
+  Slash = 47
+}
 
 export const tokenizer = new ExternalTokenizer((input, stack) => {
   let { next } = input;
@@ -19,8 +23,17 @@ export const tokenizer = new ExternalTokenizer((input, stack) => {
       input.acceptToken(Endpoint)
       console.log(word, 'endpoint')
     } else {
-      input.acceptToken(Identifier)
+      if (stack.context === STATE_ENUM.PATH_START) {
+        if (input.next === Ch.Slash) {
+          input.acceptToken(ESIndex)
+        }
+      } else {
+        input.acceptToken(Identifier)
+      }
     }
+  } else if (next === Ch.Slash) {
+    input.advance();
+    input.acceptToken(Slash)
   }
   input.advance();
 });
