@@ -3,10 +3,10 @@ import { readWord } from "./tokenUtils";
 import { Endpoint, Method, Identifier } from "./syntax.grammar.terms";
 import { methods } from './tokens/method'
 import { endpoints } from './tokens/endpoints'
-import { esStatueInstance, STATE_ENUM } from "./state";
+import { esStatueInstance } from "./state";
 
 
-export const kevinTokenizer = new ExternalTokenizer((input, stack) => {
+export const tokenizer = new ExternalTokenizer((input, stack) => {
   let { next } = input;
   const word = readWord(input)
   esStatueInstance.setState(stack.context)
@@ -26,7 +26,7 @@ export const kevinTokenizer = new ExternalTokenizer((input, stack) => {
 });
 
 export function myTokens() {
-  return kevinTokenizer
+  return tokenizer
 }
 
 
