@@ -4,10 +4,6 @@ import { styleTags, tags as t } from "@lezer/highlight"
 import { tokens, myTokens } from "./tokenizer"
 import { customTags } from "./tags"
 import { esCompletion } from "./completion"
-import { ContextTracker } from "@lezer/lr"
-import { esStatueInstance, STATE_ENUM } from "./state"
-import { readWord } from "./tokenUtils"
-import { Identifier } from "./syntax.grammar.terms"
 import contextTracker from "./contextTracker"
 
 export const ESLanguage = LRLanguage.define({
