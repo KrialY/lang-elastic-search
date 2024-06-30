@@ -1,3 +1,5 @@
+import { syntaxTree } from "@codemirror/language"
+import { EditorState } from "@codemirror/state"
 import { InputStream } from "@lezer/lr"
 
 const enum Ch {
@@ -38,7 +40,7 @@ const enum Ch {
 
 export function peekWord(input: InputStream) {
   let result = ""
-  for (let i = 0;;i++) {
+  for (let i = 0; ; i++) {
     const c = input.peek(i)
     if (!isWord(c)) break
     if (result != null) result += String.fromCharCode(c)
@@ -48,7 +50,7 @@ export function peekWord(input: InputStream) {
 
 export function readWord(input: InputStream) {
   let result = ""
-  for (;;) {
+  for (; ;) {
     if (input.next != Ch.Underscore && !isAlpha(input.next)) break
     if (result != null) result += String.fromCharCode(input.next)
     input.advance()
@@ -62,4 +64,22 @@ function isWord(ch: number) {
 
 function isAlpha(ch: number) {
   return ch >= Ch.A && ch <= Ch.Z || ch >= Ch.a && ch <= Ch.z || ch >= Ch._0 && ch <= Ch._9
+}
+
+export function getTokensBeforePosition(state: EditorState, position: number) {
+  const tree = syntaxTree(state);
+
+  let tokens: any = [];
+  tree.iterate({
+    from: 0,
+    to: position,
+    enter: (node) => {
+      const { type, to, from } = node
+      const content = state.sliceDoc(from, to)
+      if (to <= position) {
+        tokens.push({ type: type.name, from, to, content });
+      }
+    }
+  });
+  return tokens;
 }

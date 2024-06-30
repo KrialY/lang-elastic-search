@@ -10,7 +10,9 @@ expression {
   Method |
   Endpoint |
   ESIndex |
-  Slash
+  Slash |
+  UrlParamQuestion |
+  Question
 }
 
 @tokens {
@@ -31,6 +33,8 @@ expression {
   Identifier
   ESIndex
   Slash
+  UrlParamQuestion
+  Question
 }
 
 

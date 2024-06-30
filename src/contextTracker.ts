@@ -1,6 +1,6 @@
 import { ContextTracker } from "@lezer/lr";
 import { STATE_ENUM } from "./state";
-import { Method, Endpoint, ESIndex } from "./syntax.grammar.terms";
+import { Method, Endpoint, ESIndex, UrlParamQuestion } from "./syntax.grammar.terms";
 
 export default new ContextTracker({
   start: STATE_ENUM.METHOD,
@@ -11,6 +11,8 @@ export default new ContextTracker({
       return STATE_ENUM.PATH_ENDPOINT
     } else if (term === Endpoint) {
       return STATE_ENUM.PATH_ENDPOINT
+    } else if (term === UrlParamQuestion) {
+      return STATE_ENUM.URL_PARAMS_KEY
     }
     return context
   }
