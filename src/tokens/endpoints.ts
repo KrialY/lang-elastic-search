@@ -70,6 +70,24 @@ export const endpoints = {
       "{indices}/_search"
     ],
   },
-  _doc: null,
-  _alias: null
+  _doc: {
+    methods: [
+      "GET",
+      "POST"
+    ],
+    patterns: [
+      "_doc"
+    ],
+    ur_params: {}
+  },
+  _alias: {
+    methods: [
+      "GET",
+      "POST"
+    ],
+    patterns: [
+      "_alias"
+    ],
+    ur_params: {}
+  }
 }
