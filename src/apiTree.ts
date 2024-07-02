@@ -3,9 +3,9 @@ import { methods } from "./apiData/method";
 import { RootNode } from './completionNode/rootNode'
 import { IndexNode } from "./completionNode/indexNode";
 import { EndpointNode } from "./completionNode/endpointNode";
-import { UrlParams } from "./completionNode/urlParamNode";
 import { MethodNode } from "./completionNode/methodNode";
 import { BaseNode, NodeTypeEnum } from "./completionNode/baseNode";
+import { UrlParamKeyNode } from "./completionNode/urlParamKeyNode";
 
 
 export function generateApiTree(endpoints: Record<string, object>) {
@@ -28,7 +28,7 @@ export function generateApiTree(endpoints: Record<string, object>) {
       const methodNode = rootNodes.find((item: any) => item.name === method)
 
       // patterns path
-      patterns.forEach((pattern: any) => {
+      patterns.forEach((pattern: string) => {
         const patternList = pattern.split('/')
 
         let current: any = methodNode
@@ -48,13 +48,12 @@ export function generateApiTree(endpoints: Record<string, object>) {
           // url params
           if (!isESIndex) {
             Object.keys(ur_params).forEach((key) => {
-              targetNode.addChild(
-                new UrlParams({
-                  name: key,
-                  key: key,
-                  value: ur_params[key]
-                })
-              )
+              const urlValue: Array<string> | string = ur_params[key]
+              const urlKeyNode = new UrlParamKeyNode({
+                name: key,
+              })
+              urlKeyNode.addChildren(urlValue)
+              targetNode.addChild(urlKeyNode)
             })
           }
           current.addChild(targetNode)

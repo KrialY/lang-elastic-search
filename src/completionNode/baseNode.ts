@@ -4,6 +4,8 @@ export enum NodeTypeEnum {
   Root,
   Endpoint,
   UrlParam,
+  UrlKey,
+  UrlValue,
   Method,
   ESIndex
 }

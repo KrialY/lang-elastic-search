@@ -24,12 +24,6 @@ function getCompletionListByNode(node: any, currentToken: any) {
         }
       })
       res.push(...indicsCompletionList)
-    } else if (type === NodeTypeEnum.UrlParam) {
-      res.push({
-        label: item.key,
-        type: 'text',
-        boost: -1
-      })
     } else {
       res.push({
         label: item.name,
@@ -43,19 +37,14 @@ function getCompletionListByNode(node: any, currentToken: any) {
 
 function completeES() {
   return (context: CompletionContext) => {
-    let completionList: Completion[] = []
     const tokens = getTokensBeforePosition(context.state, context.pos)
     const filteredTokens = tokens.filter((item: any) => ['Method', 'Endpoint', 'ESIndex', 'UrlParamKey', 'UrlParamValue'].includes(item.type))
     const currentToken = filteredTokens[filteredTokens.length - 1]
     const node = getTreeNodesByPath(apiTree, filteredTokens)
-    // console.log(tokens, currentState, node, apiTree, 'context.pos')
-    const completionListRes = getCompletionListByNode(node, currentToken)
-
-
-    console.log(completionListRes, 'completionListRes')
-
-    completionList = completionListRes
+    const completionList: Completion[] = getCompletionListByNode(node, currentToken)
     const esSource: CompletionSource = completeFromList(completionList)
+
+    console.log(completionList, 'completionListRes')
     return esSource(context);
   };
 }
