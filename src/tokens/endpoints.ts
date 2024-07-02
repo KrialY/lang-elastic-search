@@ -76,7 +76,8 @@ export const endpoints = {
       "POST"
     ],
     patterns: [
-      "_doc"
+      "_doc",
+      "{indices}/_doc"
     ],
     ur_params: {}
   },
