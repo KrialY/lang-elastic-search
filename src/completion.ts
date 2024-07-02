@@ -2,6 +2,7 @@ import { LRLanguage } from "@codemirror/language";
 import { completeFromList, Completion, CompletionContext, CompletionSource, ifIn } from "@codemirror/autocomplete"
 import { getTokensBeforePosition } from "./tokenUtils";
 import { apiTree, getTreeNodesByPath } from "./apiTree";
+import { NodeTypeEnum } from "./completionNode/baseNode";
 
 export function esCompletion(language: LRLanguage) {
   return language.data.of({
@@ -11,9 +12,10 @@ export function esCompletion(language: LRLanguage) {
 
 function getCompletionListByNode(node: any, currentToken: any) {
   const res: any = []
+  console.log(node, 'node')
   node?.children?.forEach?.((item: any) => {
     const { type } = item ?? {}
-    if (type === 'ESIndex') {
+    if (type === NodeTypeEnum.ESIndex) {
       const indicsCompletionList = item.indics.map((i: any) => {
         return {
           label: i,
@@ -22,7 +24,7 @@ function getCompletionListByNode(node: any, currentToken: any) {
         }
       })
       res.push(...indicsCompletionList)
-    } else if (type === 'urlParams') {
+    } else if (type === NodeTypeEnum.UrlParam) {
       res.push({
         label: item.key,
         type: 'text',

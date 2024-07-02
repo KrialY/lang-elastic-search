@@ -1,8 +1,8 @@
 import { ExternalTokenizer } from "@lezer/lr";
 import { readWord } from "./tokenUtils";
 import { Endpoint, Method, Identifier, ESIndex, Slash, Question, UrlParamQuestion, UrlParamKey, UrlParamEqual, UrlParamValue, UrlParamAnd } from "./syntax.grammar.terms";
-import { methods } from './tokens/method'
-import { endpoints } from './tokens/endpoints'
+import { methods } from './apiData/method'
+import { endpoints } from './apiData/endpoints'
 import { STATE_ENUM, esStatueInstance } from "./state";
 
 

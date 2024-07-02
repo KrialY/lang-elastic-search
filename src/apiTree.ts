@@ -1,75 +1,20 @@
-import { endpoints } from "./tokens/endpoints";
-import { esIndics } from "./tokens/esIndex";
-import { methods } from "./tokens/method";
-
-
-
-class ApiTreeNode {
-  name
-  type
-  children
-  constructor(params: any) {
-    this.name = params?.name ?? ''
-    this.type = params?.type ?? ''
-    this.children = params?.children ?? []
-  }
-
-  addChild(node: any) {
-    this.children.push(node)
-  }
-}
-
-class RootNode extends ApiTreeNode {
-  constructor() {
-    super({ type: 'Root', name: 'Root' })
-  }
-}
-
-class EndpointNode extends ApiTreeNode {
-  urlParams: Object = {}
-  constructor(params: any) {
-    super(params)
-    this.type = 'endpoint'
-    this.urlParams = params?.urlParams ?? {}
-  }
-}
-
-class UrlParams extends ApiTreeNode {
-  key;
-  value;
-  constructor(params: any) {
-    super(params)
-    this.type = 'urlParams'
-    this.key = params?.key ?? ''
-    this.value = params?.value ?? ''
-  }
-}
-
-class IndexNode extends ApiTreeNode {
-  indics
-  constructor() {
-    super({ type: 'ESIndex', name: 'ESIndex' })
-    this.indics = Object.keys(esIndics)
-  }
-
-  addChild(node: any) {
-    const isExist = !!this.children.find((item: any) => item.name === node.name)
-    if (!isExist) {
-      this.children.push(node)
-    }
-
-  }
-}
+import { endpoints } from "./apiData/endpoints";
+import { methods } from "./apiData/method";
+import { RootNode } from './completionNode/rootNode'
+import { IndexNode } from "./completionNode/indexNode";
+import { EndpointNode } from "./completionNode/endpointNode";
+import { UrlParams } from "./completionNode/urlParamNode";
+import { MethodNode } from "./completionNode/methodNode";
+import { BaseNode, NodeTypeEnum } from "./completionNode/baseNode";
 
 
 export function generateApiTree(endpoints: Record<string, object>) {
   const root = new RootNode()
-  const rootNodes: any = []
+  const rootNodes: Array<BaseNode> = []
   const sharedIndexNode = new IndexNode()
 
   methods.forEach((method) => {
-    rootNodes.push(new ApiTreeNode({
-      type: 'method',
+    rootNodes.push(new MethodNode({
       name: method
     }))
   })
@@ -86,7 +31,7 @@ export function generateApiTree(endpoints: Record<string, object>) {
       patterns.forEach((pattern: any) => {
         const patternList = pattern.split('/')
 
-        let current = methodNode
+        let current: any = methodNode
         while (true) {
           const patternItem = patternList.shift()
           if (!patternItem) break
@@ -98,7 +43,6 @@ export function generateApiTree(endpoints: Record<string, object>) {
           } else {
             targetNode = new EndpointNode({
               name: patternItem,
-              urlParams: ur_params
             })
           }
           // url params
@@ -127,12 +71,11 @@ export function getTreeNodesByPath(apiTree: any, pathList: any) {
   let current = apiTree
   let queue = [...apiTree.children]
 
-  console.log(apiTree, 'api tree')
   pathList.forEach((item: any) => {
     const { content, type } = item ?? {}
     const node = queue.find((item: any) => {
       if (type === 'ESIndex') {
-        return item.type === 'ESIndex'
+        return item.type === NodeTypeEnum.ESIndex
       }
       return item.name === content
     })
@@ -143,8 +86,6 @@ export function getTreeNodesByPath(apiTree: any, pathList: any) {
       queue = []
     }
   })
-
-  console.log(pathList, current, 'current')
 
   return current
 }
