@@ -15,10 +15,6 @@ class ESState {
   setState(state: number) {
     this.currentState = state
   }
-
-
 }
-
-
 
 export const esStatueInstance = new ESState()

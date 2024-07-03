@@ -36,12 +36,31 @@ function getCompletionListByNode(node: any, currentToken: any) {
   return res
 }
 
+function getFilterTokens(tokensBeforePosition: Array<any>) {
+  const res: Array<any> = []
+  const paramsToken: Array<any> = []
+  tokensBeforePosition.forEach((item) => {
+    if ([SyncTreeNodeType.Method, SyncTreeNodeType.Endpoint,
+    SyncTreeNodeType.ESIndex].includes(item.type)) {
+      res.push(item)
+    } else if ([SyncTreeNodeType.UrlParamKey, SyncTreeNodeType.UrlParamValue, SyncTreeNodeType.UrlParamAnd]) {
+      paramsToken.push(item)
+    }
+  })
+
+  let current = paramsToken.pop()
+  while (current && current.type !== SyncTreeNodeType.UrlParamAnd) {
+    res.push(current)
+    current = paramsToken.pop()
+  }
+
+  return res;
+}
+
 function completeES() {
   return (context: CompletionContext) => {
     const tokens = getTokensBeforePosition(context.state, context.pos)
-    const filteredTokens = tokens.filter((item: any) => [SyncTreeNodeType.Method, SyncTreeNodeType.Endpoint,
-    SyncTreeNodeType.ESIndex, SyncTreeNodeType.UrlParamKey, SyncTreeNodeType.UrlParamValue].includes(item.type))
-
+    const filteredTokens = getFilterTokens(tokens)
     const currentToken = filteredTokens[filteredTokens.length - 1]
     const node = getTreeNodesByPath(apiTree, filteredTokens)
     const completionList: Completion[] = getCompletionListByNode(node, currentToken)
