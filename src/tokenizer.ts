@@ -1,17 +1,10 @@
 import { ExternalTokenizer } from "@lezer/lr";
-import { readWord } from "./tokenUtils";
+import { Ch, readWord } from "./tokenUtils";
 import { Endpoint, Method, Identifier, ESIndex, Slash, Question, UrlParamQuestion, UrlParamKey, UrlParamEqual, UrlParamValue, UrlParamAnd } from "./syntax.grammar.terms";
 import { methods } from './apiData/method'
 import { endpoints } from './apiData/endpoints'
 import { STATE_ENUM, esStatueInstance } from "./state";
 
-
-const enum Ch {
-  And = 38,
-  Slash = 47,
-  Equal = 61,
-  Question = 63
-}
 
 export const tokenizer = new ExternalTokenizer((input, stack) => {
   let { next } = input;

@@ -3,6 +3,7 @@ import { completeFromList, Completion, CompletionContext, CompletionSource, ifIn
 import { getTokensBeforePosition } from "./tokenUtils";
 import { apiTree, getTreeNodesByPath } from "./apiTree";
 import { NodeTypeEnum } from "./completionNode/baseNode";
+import { SyncTreeNodeType } from "./completionNode/const";
 
 export function esCompletion(language: LRLanguage) {
   return language.data.of({
@@ -38,7 +39,9 @@ function getCompletionListByNode(node: any, currentToken: any) {
 function completeES() {
   return (context: CompletionContext) => {
     const tokens = getTokensBeforePosition(context.state, context.pos)
-    const filteredTokens = tokens.filter((item: any) => ['Method', 'Endpoint', 'ESIndex', 'UrlParamKey', 'UrlParamValue'].includes(item.type))
+    const filteredTokens = tokens.filter((item: any) => [SyncTreeNodeType.Method, SyncTreeNodeType.Endpoint,
+    SyncTreeNodeType.ESIndex, SyncTreeNodeType.UrlParamKey, SyncTreeNodeType.UrlParamValue].includes(item.type))
+
     const currentToken = filteredTokens[filteredTokens.length - 1]
     const node = getTreeNodesByPath(apiTree, filteredTokens)
     const completionList: Completion[] = getCompletionListByNode(node, currentToken)

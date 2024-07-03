@@ -2,12 +2,13 @@ import { syntaxTree } from "@codemirror/language"
 import { EditorState } from "@codemirror/state"
 import { InputStream } from "@lezer/lr"
 
-const enum Ch {
+export const enum Ch {
   Newline = 10,
   Space = 32,
   DoubleQuote = 34,
   Hash = 35,
   Dollar = 36,
+  And = 38,
   SingleQuote = 39,
   ParenL = 40, ParenR = 41,
   Star = 42,
@@ -18,6 +19,7 @@ const enum Ch {
   Slash = 47,
   Colon = 58,
   Semi = 59,
+  Equal = 61,
   Question = 63,
   At = 64,
   BracketL = 91, BracketR = 93,

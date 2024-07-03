@@ -6,6 +6,7 @@ import { EndpointNode } from "./completionNode/endpointNode";
 import { MethodNode } from "./completionNode/methodNode";
 import { BaseNode, NodeTypeEnum } from "./completionNode/baseNode";
 import { UrlParamKeyNode } from "./completionNode/urlParamKeyNode";
+import { SyncTreeNodeType } from "./completionNode/const";
 
 
 export function generateApiTree(endpoints: Record<string, object>) {
@@ -73,7 +74,7 @@ export function getTreeNodesByPath(apiTree: any, pathList: any) {
   pathList.forEach((item: any) => {
     const { content, type } = item ?? {}
     const node = queue.find((item: any) => {
-      if (type === 'ESIndex') {
+      if (type === SyncTreeNodeType.ESIndex) {
         return item.type === NodeTypeEnum.ESIndex
       }
       return item.name === content
