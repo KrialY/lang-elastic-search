@@ -1,6 +1,6 @@
 import { ExternalTokenizer } from "@lezer/lr";
 import { Ch, readWord } from "./tokenUtils";
-import { Endpoint, Method, Identifier, ESIndex, Slash, Question, UrlParamQuestion, UrlParamKey, UrlParamEqual, UrlParamValue, UrlParamAnd } from "./syntax.grammar.terms";
+import { Endpoint, Method, Identifier, ESIndex, Slash, Question, UrlParamQuestion, UrlParamKey, UrlParamEqual, UrlParamValue, UrlParamAnd, NewLineMethodBodyStart, NewLine } from "./syntax.grammar.terms";
 import { methods } from './apiData/method'
 import { endpoints } from './apiData/endpoints'
 import { STATE_ENUM, esStatueInstance } from "./state";
@@ -47,6 +47,13 @@ export const tokenizer = new ExternalTokenizer((input, stack) => {
     if ([STATE_ENUM.URL_PARAMS_KEY, STATE_ENUM.URL_PARAMS_VALUE].includes(stack.context)) {
       input.advance();
       input.acceptToken(UrlParamAnd)
+    }
+  } else if (next === Ch.Newline) {
+    input.advance();
+    if (stack.context === STATE_ENUM.URL_PARAMS_VALUE) {
+      input.acceptToken(NewLineMethodBodyStart)
+    } else {
+      input.acceptToken(NewLine)
     }
   }
   input.advance();

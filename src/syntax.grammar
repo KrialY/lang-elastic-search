@@ -16,7 +16,9 @@ expression {
   UrlParamKey |
   UrlParamValue |
   UrlParamEqual |
-  UrlParamAnd
+  UrlParamAnd | 
+  NewLine |
+  NewLineMethodBodyStart
 }
 
 @tokens {
@@ -26,7 +28,7 @@ expression {
 
   LineComment { ";" ![\n]* }
 
-  space { $[ \t\n\r]+ }
+  space { $[ \t\r]+ }
 
   "(" ")"
 }
@@ -43,6 +45,8 @@ expression {
   UrlParamValue
   UrlParamEqual
   UrlParamAnd
+  NewLine
+  NewLineMethodBodyStart
 }
 
 

@@ -39,22 +39,31 @@ function getCompletionListByNode(node: any, currentToken: any) {
 function getFilterTokens(tokensBeforePosition: Array<any>) {
   const res: Array<any> = []
   const paramsToken: Array<any> = []
-  tokensBeforePosition.forEach((item) => {
+  // multi command
+  let newLineIndex = 0
+  for (let i = tokensBeforePosition.length - 1; i >= 0; i--) {
+    if (tokensBeforePosition[i].type === SyncTreeNodeType.NewLineMethodBodyStart) {
+      newLineIndex = i
+      break
+    }
+  }
+  tokensBeforePosition.slice(newLineIndex).forEach((item) => {
     if ([SyncTreeNodeType.Method, SyncTreeNodeType.Endpoint,
     SyncTreeNodeType.ESIndex].includes(item.type)) {
       res.push(item)
-    } else if ([SyncTreeNodeType.UrlParamKey, SyncTreeNodeType.UrlParamValue, SyncTreeNodeType.UrlParamAnd]) {
+    } else if ([SyncTreeNodeType.UrlParamKey, SyncTreeNodeType.UrlParamValue, SyncTreeNodeType.UrlParamAnd].includes(item.type)) {
       paramsToken.push(item)
     }
   })
 
   let current = paramsToken.pop()
+  const filterParamsToken = []
   while (current && current.type !== SyncTreeNodeType.UrlParamAnd) {
-    res.push(current)
+    filterParamsToken.unshift(current)
     current = paramsToken.pop()
   }
 
-  return res;
+  return [...res, ...filterParamsToken];
 }
 
 function completeES() {
@@ -66,7 +75,7 @@ function completeES() {
     const completionList: Completion[] = getCompletionListByNode(node, currentToken)
     const esSource: CompletionSource = completeFromList(completionList)
 
-    console.log(completionList, 'completionListRes')
+    console.log(tokens, currentToken, 'completionListRes')
     return esSource(context);
   };
 }

@@ -10,4 +10,5 @@ export const SyncTreeNodeType = {
   UrlParamValue: 'UrlParamValue',
   UrlParamEqual: 'UrlParamEqual',
   UrlParamAnd: 'UrlParamAnd',
+  NewLineMethodBodyStart: 'NewLineMethodBodyStart',
 }
