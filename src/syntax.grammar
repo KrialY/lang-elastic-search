@@ -18,7 +18,38 @@ expression {
   UrlParamEqual |
   UrlParamAnd | 
   NewLine |
-  NewLineMethodBodyStart
+  NewLineMethodBodyStart |
+  JSON { Object }
+}
+
+@precedence {
+  Null,
+  Boolean,
+  Number,
+  String,
+  Object,
+  Array
+}
+
+Property {
+  String Colon value
+}
+
+Array {
+  LBracket (value (Comma value)*)* RBracket
+}
+
+Object {
+  LBrace (Property (Comma Property)*)* RBrace
+}
+
+value {
+  Object |
+  Array |
+  String |
+  Number |
+  Boolean |
+  Null
 }
 
 @tokens {
@@ -31,6 +62,22 @@ expression {
   space { $[ \t\r]+ }
 
   "(" ")"
+
+  Number { @digit+ }
+
+  Null { "null" }
+
+  LBrace { "{" }
+  
+  RBrace { "}" }
+
+  LBracket { "[" }
+
+  RBracket { "]" }
+
+  Colon { ":" }
+
+  Comma { "," }
 }
 
 @external tokens tokens from "./tokenizer" {
